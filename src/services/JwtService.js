@@ -26,4 +26,30 @@ const genneralRefreshToken = async (payload) => {
   return refresh_token;
 };
 
-module.exports = { genneralAccessToken, genneralRefreshToken };
+const refreshTokenJwtService = async (token) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      jwt.verify(token, process.env.REFRESH_TOKEN, async (err, user) => {
+        if (err) {
+          return res.status(401).json({
+            status: 'ERR',
+            message: 'Authentication failed. Invalid token.',
+          });
+        }
+        const access_token = await genneralAccessToken({
+          id: user.payload?.id,
+          isAdmin: user.payload?.isAdmin,
+        });
+        resolve({
+          status: 'OK',
+          message: 'SUCESS',
+          access_token,
+        });
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+module.exports = { genneralAccessToken, genneralRefreshToken, refreshTokenJwtService };
