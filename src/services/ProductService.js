@@ -85,11 +85,37 @@ const deleteProduct = (id) => {
   });
 };
 
-const getAllProduct = (limit = 2, page = 0) => {
+const getAllProduct = (limit, page, sort, filter) => {
   return new Promise(async (resolve, reject) => {
     try {
       const totalProduct = await Product.countDocuments();
-      // console.log(await Product.countDocuments());
+      if (filter) {
+        const label = filter[0];
+        const allObjectFilter = await Product.find({ [label]: { $regex: filter[1] } })
+          .limit(limit)
+          .skip(page * limit);
+        resolve({
+          status: 'OK',
+          message: 'Success',
+          data: allObjectFilter,
+          total: totalProduct,
+          pageCurrent: Number(page + 1),
+          totalPage: Math.ceil(totalProduct / limit),
+        });
+      }
+      if (sort) {
+        const objSort = {};
+        objSort[sort[0]] = sort[1];
+        const allProduct = await Product.find().sort(objSort).limit(limit).skip(page);
+        resolve({
+          status: 'OK',
+          message: 'Success',
+          data: allProduct,
+          total: totalProduct,
+          pageCurrent: Number(page + 1),
+          totalPage: Math.ceil(totalProduct / limit),
+        });
+      }
       const allProduct = await Product.find().limit(limit).skip(page);
       resolve({
         status: 'OK',
