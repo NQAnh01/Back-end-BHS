@@ -10,6 +10,8 @@ const productSchema = new Schema(
     countInStock: { type: Number, required: true },
     rating: { type: Number, required: true },
     description: { type: String },
+    salled: { type: Number },
+    discount: { type: Number },
   },
   {
     timestamps: true,

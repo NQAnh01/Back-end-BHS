@@ -12,9 +12,9 @@ const authMiddleware = (req, res, next) => {
         message: 'Authentication failed. Invalid token.',
       });
     }
-    const payload = user.payload;
-    console.log('user: ', payload.isAdmin);
-    if (payload?.isAdmin) {
+    // const payload = user.payload;
+    // console.log('user: ', payload.isAdmin);
+    if (user?.isAdmin) {
       next();
     } else {
       return res.status(403).json({
@@ -34,9 +34,9 @@ const authUserMiddleware = (req, res, next) => {
         message: 'Authentication failed. Invalid token.',
       });
     }
-    const payload = user.payload;
-    console.log('user: ', payload.isAdmin);
-    if (payload?.isAdmin || payload?.id === userId) {
+    // const payload = user.payload;
+    // console.log('user: ', payload.isAdmin);
+    if (user?.isAdmin || user?.id === userId) {
       next();
     } else {
       return res.status(403).json({
